@@ -1,0 +1,128 @@
+/* .App {
+  text-align: center;
+} */
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+  height: 100px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.form-text-field {
+  width: 25rem;
+  color:white;
+}
+
+.welcome-txt {
+  display: inline;
+  vertical-align: super;
+}
+
+.bot-txt {
+  margin-bottom: 10px;
+}
+
+.one-step-away-text {
+  margin: 10px 0px 20px 0px;
+}
+
+.fill-in-text {
+  text-align: start;
+  font-size: medium;
+}
+
+.upload-file-btn {
+  height: 100%;
+}
+
+.form-row {
+  --bs-gutter-x: 0.7rem !important;
+}
+
+.MuiSelect-icon {
+  color: white !important;
+}
+
+input[type=date]:required:invalid::-webkit-datetime-edit {
+  color: transparent;
+}
+
+input[type=date]:focus::-webkit-datetime-edit {
+  color: white !important;
+}
+
+.docu-list-item {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+  background-color: rgb(200, 200, 248);
+  border-radius:5px;
+  font-size: 15px;
+  border: 1px solid #1976d2;
+  color: #282c34;
+}
+
+.file-name {
+  flex: 1;
+}
+
+.docu-list-item-div {
+  padding: 10px 10px 0px 10px;
+}
+
+.doc-delete-icon {
+  color:rgb(164, 8, 8);
+  cursor: pointer;
+}
+
+.doc-icon {
+  color: #1976d2;
+}
+
+.submit-btn-div {
+  text-align: center;
+}
+
+.load-div {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: #282c34;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
