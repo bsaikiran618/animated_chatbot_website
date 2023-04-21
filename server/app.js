@@ -5,7 +5,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const formRouter = require('./routes.js');
+const formRouter = require("./routers/formRouter.js");
 // constants
 const port = process.env.PORT || 8000;
 
@@ -29,4 +29,4 @@ mongoose
     console.log(error);
   });
 
-  app.use("/", formRouter);
+app.use("/", formRouter);
