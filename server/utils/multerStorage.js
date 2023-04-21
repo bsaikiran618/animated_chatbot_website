@@ -5,6 +5,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    console.log("HALLO 0910239-12093-10293-10293-102939-12093-");
     let hashValue = md5(file.originalname + Date.now());
     pathValue = path.join(
       __dirname,
@@ -13,7 +14,6 @@ const storage = multer.diskStorage({
       hashValue.slice(0, 2)
     );
 
-    console.log("HALLO 0910239-12093-10293-10293-102939-12093-");
 
     var stat = null;
     try {

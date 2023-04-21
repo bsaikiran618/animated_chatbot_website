@@ -25,7 +25,6 @@ export const Home = () => {
     dob: "",
     gender: "",
     city: "",
-    documents: "",
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -73,6 +72,7 @@ export const Home = () => {
     // });
     const formData = new FormData();
 
+    console.log("File: ", files[0]);
     formData.append("document1", files[0]);
     const otherData = JSON.parse(JSON.stringify(data));
     otherData.document1FilePath = files[0].name;
