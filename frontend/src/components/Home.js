@@ -74,11 +74,11 @@ export const Home = () => {
 
     console.log("File: ", files[0]);
     formData.append("document1", files[0]);
-    const otherData = JSON.parse(JSON.stringify(data));
-    otherData.document1FilePath = files[0].name;
-    formData.append("otherData", JSON.stringify(otherData));
-
-    Axios.post("http://localhost:8000/submitForm", formData, {
+    // const otherData = JSON.parse(JSON.stringify(data));
+    // otherData.document1FilePath = files[0].name;
+    // formData.append("otherData", JSON.stringify(otherData));
+    
+    Axios.post("http://localhost:8000/fileUpload", formData, {
       headers: {
         "Content-Type": "application/json",
       },

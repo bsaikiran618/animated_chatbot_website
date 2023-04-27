@@ -31,6 +31,11 @@ const { sendLinkTemplate } = require("../email_templates/templates");
 
 const User = require("../models/user");
 
+router.post("/fileUpload", upload.single("document1"), (req, res)=>{
+  console.log("ok");
+  res.json({message: "ok"});
+})
+
 router.post("/submitForm", upload.single("document1"), (req, res) => {
   //console.log(JSON.parse(req.body.otherData));
   const userData = JSON.parse(req.body.otherData);
