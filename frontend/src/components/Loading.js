@@ -4,8 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 export const Loading = () => {
     const navigate = useNavigate();
+    console.log(window.location.href);
     setTimeout(() => {
-        navigate('home');
+        if (window.location.href.endsWith("chatbotload"))
+            navigate('../chatbot');
+        else
+            navigate('home');
     }, 1000);
     return (
         <div className="load-div">

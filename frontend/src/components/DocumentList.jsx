@@ -2,7 +2,7 @@ import { DocumentItem } from "./DocumentItem";
 
 export const DocumentList = ({files, setFiles}) => {
     const deleteFileHandler = (_name) => {
-        const updatedFiles = files.filter(file => file.name != _name);
+        const updatedFiles = files.filter(file => file.name !== _name);
         setFiles([...updatedFiles]);
     }
     return (
