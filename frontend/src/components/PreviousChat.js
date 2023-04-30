@@ -1,3 +1,5 @@
+import { faRobot, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import giphy from "../giphy (1).gif";
 import talk from '../talk.webm';
 
@@ -9,7 +11,7 @@ export const PreviousChat = ({chat}) => {
                     <p className="user-query">{chat.userQuery}</p> 
                 </div>
 
-                <div className="big-bubble-right"></div>
+                <div className="big-bubble-right" style={{textAlign:'center'}}><FontAwesomeIcon icon={faUser}/></div>
                 <div className="small-bubble-right"></div>
 
                 <div className="video-response-div">
@@ -17,7 +19,7 @@ export const PreviousChat = ({chat}) => {
                         <video src={ talk } className="talking-video" controls autoPlay muted
                         />
 
-                        <div className="big-bubble-left"></div>
+                        <div className="big-bubble-left" style={{textAlign:'center'}}><FontAwesomeIcon icon={faRobot}/></div>
                         <div className="small-bubble-left"></div>
                     </div>
 

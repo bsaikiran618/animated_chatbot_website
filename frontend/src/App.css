@@ -12,6 +12,10 @@
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+
+  .submit-btn-spinner {
+    animation: App-logo-spin infinite 1s linear;
+  }
 }
 
 .App-header {
@@ -266,6 +270,11 @@ input[type=date]:focus::-webkit-datetime-edit {
 .header-icon {
   color:skyblue;
   font-size: 20px;
+}
+
+.submit-btn-spinner {
+  color: white !important;
+  font-size: 40px;
 }
 
 ::-webkit-calendar-picker-indicator {

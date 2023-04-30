@@ -1,6 +1,6 @@
 import { PreviousChat } from './PreviousChat';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMessageBot, faRobot } from "@fortawesome/free-solid-svg-icons";
+import { faRobot } from "@fortawesome/free-solid-svg-icons";
 
 export const ChatHistory = ({chats}) => {
     return (

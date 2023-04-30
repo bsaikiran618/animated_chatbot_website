@@ -5,18 +5,21 @@ import "../App.css";
 import { useState } from "react";
 import { MyTextField } from "./MyTextField";
 import Axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { DocumentList } from "./DocumentList";
 import {
   faArrowCircleRight,
+  faSmile,
+  faSpinner,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 
 export const Home = () => {
-  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitted] = useState(false);
   const [files, setFiles] = useState([]);
-  const [data, setData] = useState({
+  const [open, setOpen] = useState(false);
+  const initialData = {
     firstName: "",
     middleName: "",
     lastName: "",
@@ -25,71 +28,80 @@ export const Home = () => {
     dob: "",
     gender: "",
     city: "",
-  });
+  };
+  const [data, setData] = useState(initialData);
 
-  const [formErrors, setFormErrors] = useState({
+  const initialFormErrors = {
     firstName: {
       error: false,
-      errorMessage: "First Name is mandatory!",
+      errorMessage: "",
     },
     middleName: {
       error: false,
-      errorMessage: "Middle Name is mandatory!",
+      errorMessage: "",
     },
     lastName: {
       error: false,
-      errorMessage: "Last Name is mandatory!",
+      errorMessage: "",
     },
     email: {
       error: false,
-      errorMessage: "Email Address is mandatory!",
+      errorMessage: "",
     },
     phone: {
       error: false,
-      errorMessage: "Phone Number is mandatory!",
+      errorMessage: "",
     },
     dob: {
       error: false,
-      errorMessage: "Date of Birth is mandatory!",
+      errorMessage: "",
     },
     gender: {
       error: false,
-      errorMessage: "Gender is mandatory!",
+      errorMessage: "",
     },
     city: {
       error: false,
-      errorMessage: "City is mandatory!",
+      errorMessage: "",
     },
     documents: {
       error: false,
-      errorMessage: "Documents is mandatory!",
+      errorMessage: "",
     },
-  });
+  };
+
+  const [formErrors, setFormErrors] = useState({...initialFormErrors});
 
   function submitForm(e) {
     e.preventDefault();
-    // Axios.get().then(response => {
-    // });
-    const formData = new FormData();
 
-    console.log("File: ", files[0]);
-    formData.append("document1", files[0]);
-    // const otherData = JSON.parse(JSON.stringify(data));
-    // otherData.document1FilePath = files[0].name;
-    // formData.append("otherData", JSON.stringify(otherData));
-    
-    Axios.post("http://localhost:8000/fileUpload", formData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        console.log(response);
+    if (validateFormData()) {
+      setIsSubmitted(true);
+      const formData = new FormData();
+      formData.append("document1", files[0]);
+      
+      Axios.post("http://localhost:8000/fileUpload", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-      .catch((err) => {
-        console.log(err);
-      });
-    //navigate('../chatbot');
+        .then((response) => {
+          afterSubmitActions();
+          setIsSubmitted(false);
+        })
+        .catch((err) => {
+          setIsSubmitted(false);
+        });
+    } else {
+      setFormErrors({...formErrors});
+    }
+  }
+
+  function afterSubmitActions() {
+    setOpen(true);
+    setIsSubmitted(false);
+    setData(initialData);
+    setFiles([]);
   }
 
   function updateField(e) {
@@ -99,14 +111,75 @@ export const Home = () => {
     if (e.target.id === "documents") newData[e.target.id] = e.target.files;
     else newData[e.target.id] = e.target.value;
 
-    console.log(data);
     setData(newData);
+    updateErrors();
   }
 
   function updateDocuments(e) {
     const updatedFiles = [...files, ...e.target.files];
     setFiles(updatedFiles);
-    console.log("files now: ", updatedFiles);
+  }
+
+  function validateFormData() {
+    if (!data.firstName) {
+      formErrors.firstName.error = true;
+      formErrors.firstName.errorMessage = 'Please Provide First Name!';
+      return false;
+    } else if (!data.lastName) {
+      formErrors.lastName.error = true;
+      formErrors.lastName.errorMessage = 'Please Provide Last Name!';
+      return false;
+    } else if (!data.email) {
+      formErrors.email.error = true;
+      formErrors.email.errorMessage = 'Please Provide Email Address!';
+      return false;
+    } else if (!data.phone) {
+      formErrors.phone.error = true;
+      formErrors.phone.errorMessage = 'Please Provide Phone Number!';
+      return false;
+    } else if (!data.gender) {
+      formErrors.gender.error = true;
+      formErrors.gender.errorMessage = 'Please Select a Gender!';
+      return false;
+    } else if (!data.dob) {
+      formErrors.dob.error = true;
+      formErrors.dob.errorMessage = 'Please Select Birthday date!';
+      return false;
+    } else if (!data.city) {
+      formErrors.city.error = true;
+      formErrors.city.errorMessage = 'Please Provide City Name!';
+      return false;
+    } else if (!/^[a-zA-Z]+$/.test(data.firstName)) {
+      formErrors.firstName.error = true;
+      formErrors.firstName.errorMessage = 'First Name must have only letters!';
+      return false;
+    } else if (!/^[a-zA-Z]+$/.test(data.middleName)) {
+      formErrors.middleName.error = true;
+      formErrors.middleName.errorMessage = 'Middle Name must have only letters!';
+      return false;
+    } else if (!/^[a-zA-Z]+$/.test(data.lastName)) {
+      formErrors.lastName.error = true;
+      formErrors.lastName.errorMessage = 'Last Name must have only letters!';
+      return false;
+    } else if (!/^[a-z0-9A-Z_.]+@[a-z]+\.[a-z]{2,3}$/.test(data.email)) {
+      formErrors.email.error = true;
+      formErrors.email.errorMessage = 'Invalid Email Address! xx@xx.xx';
+      return false;
+    } else if (!/^[0-9]{10}$/.test(data.phone)) {
+      formErrors.phone.error = true;
+      formErrors.phone.errorMessage = 'Phone Number must have exact 10 digits!';
+      return false;
+    } else if (!/^[a-zA-Z]+$/.test(data.city)) {
+      formErrors.city.error = true;
+      formErrors.city.errorMessage = 'City Name must have only letters!';
+      return false;
+    }
+
+    return true;
+  }
+
+  function updateErrors() {
+    setFormErrors({...initialFormErrors});
   }
 
   return (
@@ -122,7 +195,7 @@ export const Home = () => {
           You are just one step away from conversating with the bot!!{" "}
         </h6>
         <div>
-          <p className="fill-in-text">Fill in your details-</p>
+          <p className="fill-in-text">Fill-in your details-</p>
           <form onSubmit={(e) => submitForm(e)}>
             <Row className="mb-3 form-row">
               <Col className="form-column">
@@ -285,13 +358,43 @@ export const Home = () => {
                 variant="contained"
                 color="success"
                 onClick={submitForm}
+                disabled={isSubmitting}
+                style={{height:'45px'}}
               >
-                <FontAwesomeIcon icon={faArrowCircleRight} /> &nbsp; Submit
+                <FontAwesomeIcon 
+                  icon={faSpinner} style={isSubmitting ? { display: 'inline' } : { display: 'none' }} 
+                  className="submit-btn-spinner"/>
+                <div style={!isSubmitting ? { display: 'inline' } : { display: 'none' }}>
+                  <FontAwesomeIcon icon={faArrowCircleRight}/>
+                  &nbsp; Submit 
+                </div>
               </Button>
             </div>
           </form>
         </div>
-      </header>
+      </header> 
+
+      <Dialog 
+            aria-labelledby='dialog-title' 
+            aria-describedby='dialog-description'
+            open={open}
+            onClose={() => setOpen(false)}
+            maxWidth='md'
+            >
+        <DialogTitle id='dialog-title' style={{color:'green'}}>
+          Success!  <FontAwesomeIcon icon={faSmile}/>
+        </DialogTitle>
+        <DialogContent>
+            <DialogContentText id='dialog-description' style={{color:'#282c34', margin:'10px'}}>
+                Successfully Submitted! Please check your e-mail inbox for a link to the Audio Video Conversational Bot.
+                <br /> Thank You!
+            </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <Button autoFocus variant='outlined' color='success' onClick={() => setOpen(false)}>Okay</Button>
+        </DialogActions>
+      </Dialog>
+
     </div>
   );
 };
