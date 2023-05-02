@@ -47,6 +47,7 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
 
   mailer.sendMail(userData.email, sendLinkTemplate, {
     userName: userData.firstName,
+    conversationKey: "123123123123",
   });
   res.json({ message: "Added new user" });
 });
@@ -54,7 +55,6 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
 router.post("/newMessage", (req, res) => {
   const newMessage = new message(req.body.newMessage);
   newMessage.save();
-
   console.log("new message stored.");
 });
 

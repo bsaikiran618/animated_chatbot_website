@@ -1,0 +1,28 @@
+Application Flow
+================
+
+1) User signs up, gives basic details, uploads documents
+    -- Sign up does
+    -- document upload not working.
+
+2) user is sent an email with the link to the chatbot conversation.
+    -- email works.
+    -- link should be embedded in the mail.
+
+3) chatbot starts by asking a few questions regarding the details given earlier
+    -- INCOMPLETE
+
+4) if details, incorrect, the chatbot must recognize.
+    -- INCOMPLETE
+
+5) the whole conversation must be stored.
+    -- coded but not tested
+
+6) link expiry ???
+
+EXTRA NOTES:
+============
+
+1) text to speech also in frontend ??
+2) the email link must have USER ID and CONVERSATION ID
+3) frontend chatbot page must verify the above details on load with an API.
