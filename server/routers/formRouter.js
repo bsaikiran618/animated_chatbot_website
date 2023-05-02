@@ -30,11 +30,12 @@ const upload = multer({
 const { sendLinkTemplate } = require("../email_templates/templates");
 
 const User = require("../models/user");
+const message = require("../models/message");
 
-router.post("/fileUpload", upload.single("document1"), (req, res)=>{
+router.post("/fileUpload", upload.single("document1"), (req, res) => {
   console.log("ok");
-  res.json({message: "ok"});
-})
+  res.json({ message: "ok" });
+});
 
 router.post("/submitForm", upload.single("document1"), (req, res) => {
   //console.log(JSON.parse(req.body.otherData));
@@ -48,6 +49,13 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
     userName: userData.firstName,
   });
   res.json({ message: "Added new user" });
+});
+
+router.post("/newMessage", (req, res) => {
+  const newMessage = new message(req.body.newMessage);
+  newMessage.save();
+
+  console.log("new message stored.");
 });
 
 module.exports = router;
