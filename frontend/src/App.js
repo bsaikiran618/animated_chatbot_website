@@ -26,8 +26,8 @@ function App() {
     <Routes>
       <Route path='/' element={<Loading />}></Route>
       <Route path='home' element={<Home />}></Route>
-      <Route path='chatbotload' element={<Loading />}></Route>
-      <Route path='chatbot' element={<Chatbot />}></Route>
+      <Route path='chatbotload/:userID' element={<Loading />}></Route>
+      <Route path='chatbot/:userID' element={<Chatbot />}></Route>
     </Routes>
   );
 }

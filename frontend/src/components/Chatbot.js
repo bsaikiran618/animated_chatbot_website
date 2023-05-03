@@ -7,10 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import talk from '../talk.webm';
 import { useState, useEffect } from 'react';
 import { ChatHistory } from './ChatHistory';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Axios from "axios";
 
 export const Chatbot = () => {
     const navigate = useNavigate();
+    const { userID } = useParams();
 
     useEffect(() => {
         document.title = "Chatbot"
@@ -33,6 +35,7 @@ export const Chatbot = () => {
         }];
         setChats([...chats, ...chat]);
 
+
         setTimeout(() => {
             const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
             console.log(y);
@@ -44,7 +47,15 @@ export const Chatbot = () => {
             }
         }, 100);
 
-        setTimeout(() => {
+        Axios.post("http://localhost:8000/newMessage", {
+            userID: userID,
+            content: document.getElementById('textarea-id').value
+        }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        })
+        .then((response) => {
             chat[0].videoResponse = '../talk.webm';
             setChats([...chats, ...chat]);
             setTimeout(() => {
@@ -57,7 +68,25 @@ export const Chatbot = () => {
                     });
                 }
             }, 100);
-        }, 3000);
+        })
+        .catch((err) => {
+        });
+
+        // setTimeout(() => {
+        //     console.log("userID", userID);
+        //     chat[0].videoResponse = '../talk.webm';
+        //     setChats([...chats, ...chat]);
+        //     setTimeout(() => {
+        //         const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
+        //         console.log(y);
+        //         if (y > 770) {
+        //             window.scroll({
+        //                 top: y,
+        //                 behavior: 'smooth'
+        //             });
+        //         }
+        //     }, 100);
+        // }, 3000);
     
         resetTranscript();
       }

@@ -1,13 +1,13 @@
 import "../App.css";
 import giphy from "../giphy (1).gif";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const Loading = () => {
     const navigate = useNavigate();
-    console.log(window.location.href);
+    const { userID } = useParams();
     setTimeout(() => {
-        if (window.location.href.endsWith("chatbotload"))
-            navigate('../chatbot');
+        if (window.location.href.includes("chatbotload"))
+            navigate('../chatbot/' + userID);
         else
             navigate('home');
     }, 1000);
