@@ -49,7 +49,6 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
   const newUser = new User(userData);
   newUser.save();
 
-  console.log("USER ID IS ", newUser._id);
   mailer.sendMail(userData.email, sendLinkTemplate, {
     userName: userData.firstName,
     conversationKey: String(newUser._id),
@@ -59,7 +58,7 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
 
 router.post("/newMessage", (req, res) => {
   const { userID, content } = req.body;
-  const userMessage = new message({ fromUserID: userID, toUserID: 0, content });
+  const userMessage = new message({ userID, isReply: false, content });
   userMessage.save();
   openAi
     .createChatCompletion({
@@ -68,16 +67,16 @@ router.post("/newMessage", (req, res) => {
     })
     .then((response) => {
       const responseMessage = new message({
-        fromUserID: 0,
-        toUserID: fromUser,
+        userID,
+        isReply: true,
         content: response.data.choices[0].message.content,
       });
       responseMessage.save();
       res.json({ gptResponse: response.data.choices[0].message.content });
     })
     .catch((error) => {
-      res.json({ error: error.response.data });
-      console.log(error.response.data);
+      res.json({ error: error.response });
+      console.log(error.response);
     });
 
   console.log("new message stored.");
