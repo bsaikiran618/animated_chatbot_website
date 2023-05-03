@@ -13,7 +13,13 @@ import {
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 export const Home = () => {
   const [isSubmitting, setIsSubmitted] = useState(false);
@@ -70,7 +76,7 @@ export const Home = () => {
     },
   };
 
-  const [formErrors, setFormErrors] = useState({...initialFormErrors});
+  const [formErrors, setFormErrors] = useState({ ...initialFormErrors });
 
   function submitForm(e) {
     e.preventDefault();
@@ -79,8 +85,9 @@ export const Home = () => {
       setIsSubmitted(true);
       const formData = new FormData();
       formData.append("document1", files[0]);
-      
-      Axios.post("http://localhost:8000/fileUpload", formData, {
+      formData.append("otherData", JSON.stringify(data));
+
+      Axios.post("http://localhost:8000/submitForm", formData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -93,7 +100,7 @@ export const Home = () => {
           setIsSubmitted(false);
         });
     } else {
-      setFormErrors({...formErrors});
+      setFormErrors({ ...formErrors });
     }
   }
 
@@ -123,55 +130,56 @@ export const Home = () => {
   function validateFormData() {
     if (!data.firstName) {
       formErrors.firstName.error = true;
-      formErrors.firstName.errorMessage = 'Please Provide First Name!';
+      formErrors.firstName.errorMessage = "Please Provide First Name!";
       return false;
     } else if (!data.lastName) {
       formErrors.lastName.error = true;
-      formErrors.lastName.errorMessage = 'Please Provide Last Name!';
+      formErrors.lastName.errorMessage = "Please Provide Last Name!";
       return false;
     } else if (!data.email) {
       formErrors.email.error = true;
-      formErrors.email.errorMessage = 'Please Provide Email Address!';
+      formErrors.email.errorMessage = "Please Provide Email Address!";
       return false;
     } else if (!data.phone) {
       formErrors.phone.error = true;
-      formErrors.phone.errorMessage = 'Please Provide Phone Number!';
+      formErrors.phone.errorMessage = "Please Provide Phone Number!";
       return false;
     } else if (!data.gender) {
       formErrors.gender.error = true;
-      formErrors.gender.errorMessage = 'Please Select a Gender!';
+      formErrors.gender.errorMessage = "Please Select a Gender!";
       return false;
     } else if (!data.dob) {
       formErrors.dob.error = true;
-      formErrors.dob.errorMessage = 'Please Select Birthday date!';
+      formErrors.dob.errorMessage = "Please Select Birthday date!";
       return false;
     } else if (!data.city) {
       formErrors.city.error = true;
-      formErrors.city.errorMessage = 'Please Provide City Name!';
+      formErrors.city.errorMessage = "Please Provide City Name!";
       return false;
     } else if (!/^[a-zA-Z]+$/.test(data.firstName)) {
       formErrors.firstName.error = true;
-      formErrors.firstName.errorMessage = 'First Name must have only letters!';
+      formErrors.firstName.errorMessage = "First Name must have only letters!";
       return false;
     } else if (!/^[a-zA-Z]+$/.test(data.middleName)) {
       formErrors.middleName.error = true;
-      formErrors.middleName.errorMessage = 'Middle Name must have only letters!';
+      formErrors.middleName.errorMessage =
+        "Middle Name must have only letters!";
       return false;
     } else if (!/^[a-zA-Z]+$/.test(data.lastName)) {
       formErrors.lastName.error = true;
-      formErrors.lastName.errorMessage = 'Last Name must have only letters!';
+      formErrors.lastName.errorMessage = "Last Name must have only letters!";
       return false;
     } else if (!/^[a-z0-9A-Z_.]+@[a-z]+\.[a-z]{2,3}$/.test(data.email)) {
       formErrors.email.error = true;
-      formErrors.email.errorMessage = 'Invalid Email Address! xx@xx.xx';
+      formErrors.email.errorMessage = "Invalid Email Address! xx@xx.xx";
       return false;
     } else if (!/^[0-9]{10}$/.test(data.phone)) {
       formErrors.phone.error = true;
-      formErrors.phone.errorMessage = 'Phone Number must have exact 10 digits!';
+      formErrors.phone.errorMessage = "Phone Number must have exact 10 digits!";
       return false;
     } else if (!/^[a-zA-Z]+$/.test(data.city)) {
       formErrors.city.error = true;
-      formErrors.city.errorMessage = 'City Name must have only letters!';
+      formErrors.city.errorMessage = "City Name must have only letters!";
       return false;
     }
 
@@ -179,7 +187,7 @@ export const Home = () => {
   }
 
   function updateErrors() {
-    setFormErrors({...initialFormErrors});
+    setFormErrors({ ...initialFormErrors });
   }
 
   return (
@@ -359,42 +367,60 @@ export const Home = () => {
                 color="success"
                 onClick={submitForm}
                 disabled={isSubmitting}
-                style={{height:'45px'}}
+                style={{ height: "45px" }}
               >
-                <FontAwesomeIcon 
-                  icon={faSpinner} style={isSubmitting ? { display: 'inline' } : { display: 'none' }} 
-                  className="submit-btn-spinner"/>
-                <div style={!isSubmitting ? { display: 'inline' } : { display: 'none' }}>
-                  <FontAwesomeIcon icon={faArrowCircleRight}/>
-                  &nbsp; Submit 
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  style={
+                    isSubmitting ? { display: "inline" } : { display: "none" }
+                  }
+                  className="submit-btn-spinner"
+                />
+                <div
+                  style={
+                    !isSubmitting ? { display: "inline" } : { display: "none" }
+                  }
+                >
+                  <FontAwesomeIcon icon={faArrowCircleRight} />
+                  &nbsp; Submit
                 </div>
               </Button>
             </div>
           </form>
         </div>
-      </header> 
+      </header>
 
-      <Dialog 
-            aria-labelledby='dialog-title' 
-            aria-describedby='dialog-description'
-            open={open}
-            onClose={() => setOpen(false)}
-            maxWidth='md'
-            >
-        <DialogTitle id='dialog-title' style={{color:'green'}}>
-          Success!  <FontAwesomeIcon icon={faSmile}/>
+      <Dialog
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-description"
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth="md"
+      >
+        <DialogTitle id="dialog-title" style={{ color: "green" }}>
+          Success! <FontAwesomeIcon icon={faSmile} />
         </DialogTitle>
         <DialogContent>
-            <DialogContentText id='dialog-description' style={{color:'#282c34', margin:'10px'}}>
-                Successfully Submitted! Please check your e-mail inbox for a link to the Audio Video Conversational Bot.
-                <br /> Thank You!
-            </DialogContentText>
+          <DialogContentText
+            id="dialog-description"
+            style={{ color: "#282c34", margin: "10px" }}
+          >
+            Successfully Submitted! Please check your e-mail inbox for a link to
+            the Audio Video Conversational Bot.
+            <br /> Thank You!
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button autoFocus variant='outlined' color='success' onClick={() => setOpen(false)}>Okay</Button>
+          <Button
+            autoFocus
+            variant="outlined"
+            color="success"
+            onClick={() => setOpen(false)}
+          >
+            Okay
+          </Button>
         </DialogActions>
       </Dialog>
-
     </div>
   );
 };

@@ -25,4 +25,5 @@ EXTRA NOTES:
 
 1) text to speech also in frontend ??
 2) the email link must have USER ID and CONVERSATION ID
+    http://localhost:3000/chatbotload/userID/conversationID
 3) frontend chatbot page must verify the above details on load with an API.

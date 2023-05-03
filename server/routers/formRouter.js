@@ -32,10 +32,14 @@ const { sendLinkTemplate } = require("../email_templates/templates");
 const User = require("../models/user");
 const message = require("../models/message");
 
-router.post("/fileUpload", upload.single("document1"), (req, res) => {
-  console.log("ok");
-  res.json({ message: "ok" });
-});
+const { config } = require("dotenv");
+config();
+const { Configuration, OpenAIApi } = require("openai");
+const openAi = new OpenAIApi(
+  new Configuration({
+    apiKey: process.env.OPEN_AI_API_KEY,
+  })
+);
 
 router.post("/submitForm", upload.single("document1"), (req, res) => {
   //console.log(JSON.parse(req.body.otherData));
@@ -45,16 +49,37 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
   const newUser = new User(userData);
   newUser.save();
 
+  console.log("USER ID IS ", newUser._id);
   mailer.sendMail(userData.email, sendLinkTemplate, {
     userName: userData.firstName,
-    conversationKey: "123123123123",
+    conversationKey: String(newUser._id),
   });
   res.json({ message: "Added new user" });
 });
 
 router.post("/newMessage", (req, res) => {
-  const newMessage = new message(req.body.newMessage);
-  newMessage.save();
+  const { userID, content } = req.body;
+  const userMessage = new message({ fromUserID: userID, toUserID: 0, content });
+  userMessage.save();
+  openAi
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: content }],
+    })
+    .then((response) => {
+      const responseMessage = new message({
+        fromUserID: 0,
+        toUserID: fromUser,
+        content: response.data.choices[0].message.content,
+      });
+      responseMessage.save();
+      res.json({ gptResponse: response.data.choices[0].message.content });
+    })
+    .catch((error) => {
+      res.json({ error: error.response.data });
+      console.log(error.response.data);
+    });
+
   console.log("new message stored.");
 });
 
