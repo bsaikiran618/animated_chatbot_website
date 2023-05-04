@@ -160,10 +160,9 @@ export const Home = () => {
       formErrors.firstName.error = true;
       formErrors.firstName.errorMessage = "First Name must have only letters!";
       return false;
-    } else if (!/^[a-zA-Z]+$/.test(data.middleName)) {
+    } else if (data.middleName && !/^[a-zA-Z]+$/.test(data.middleName)) {
       formErrors.middleName.error = true;
-      formErrors.middleName.errorMessage =
-        "Middle Name must have only letters!";
+      formErrors.middleName.errorMessage = "Middle Name must have only letters!";
       return false;
     } else if (!/^[a-zA-Z]+$/.test(data.lastName)) {
       formErrors.lastName.error = true;

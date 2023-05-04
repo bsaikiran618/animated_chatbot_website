@@ -4,15 +4,13 @@ import { Button } from "@mui/material";
 import waves from '../wavess.gif';
 import { faStopCircle, faRefresh, faPaperPlane, faMicrophoneAlt, faHome, faRobot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-//import talk from '../talk.webm';
 import { useState, useEffect } from 'react';
 import { ChatHistory } from './ChatHistory';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
 export const Chatbot = () => {
     const navigate = useNavigate();
-    const { userID } = useParams();
 
     useEffect(() => {
         document.title = "Chatbot"
@@ -31,14 +29,12 @@ export const Chatbot = () => {
         let chat = [{
             key: (new Date()).getTime(),
             userQuery: document.getElementById('textarea-id').value,
-            videoResponse: ''
+            response: ''
         }];
         setChats([...chats, ...chat]);
 
-
         setTimeout(() => {
             const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
-            console.log(y);
             if (y > 1000) {
                 window.scroll({
                     top: y,
@@ -56,11 +52,11 @@ export const Chatbot = () => {
         },
         })
         .then((response) => {
-            chat[0].videoResponse = '../talk.webm';
+            // replace the hardcoded text with the response text!!!
+            chat[0].response = 'Hello, this is audio visual conversational bot';
             setChats([...chats, ...chat]);
             setTimeout(() => {
                 const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
-                console.log(y);
                 if (y > 770) {
                     window.scroll({
                         top: y,
@@ -73,12 +69,10 @@ export const Chatbot = () => {
         });
 
         // setTimeout(() => {
-        //     console.log("userID", userID);
-        //     chat[0].videoResponse = '../talk.webm';
+        //     chat[0].response = 'Hello, this is audio visual conversational bot';
         //     setChats([...chats, ...chat]);
         //     setTimeout(() => {
         //         const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
-        //         console.log(y);
         //         if (y > 770) {
         //             window.scroll({
         //                 top: y,
