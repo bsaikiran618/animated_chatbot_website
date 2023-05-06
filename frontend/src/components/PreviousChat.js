@@ -33,7 +33,7 @@ export const PreviousChat = ({chat}) => {
                                 className="talking-video" 
                                 onPlay={(e)=>startSpeaking(e, chat.response)}  
                                 onPause={()=>stopSpeaking()}
-                                autoPlay controls/>
+                                autoPlay controls loop/>
 
                             <div className="big-bubble-left" style={{textAlign:'center'}}><FontAwesomeIcon icon={faRobot}/></div>
                             <div className="small-bubble-left"></div>
