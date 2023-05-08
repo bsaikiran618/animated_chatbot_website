@@ -11,20 +11,68 @@ import {
   faMicrophoneAlt,
   faHome,
   faRobot,
+  faSadTear,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import { ChatHistory } from "./ChatHistory";
 import { useNavigate, useParams } from "react-router-dom";
 import Axios from "axios";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 export const Chatbot = () => {
   const navigate = useNavigate();
   const { userID } = useParams();
-
+  const [open, setOpen] = useState(false);
+  const [chats, setChats] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  
   useEffect(() => {
     document.title = "Chatbot";
-  }, []);
+    let chat = [
+      {
+        key: new Date().getTime(),
+        userQuery: "",
+        response: "",
+      },
+    ];
+    setChats([...chat]);
+    Axios.post(
+      "http://localhost:8000/newMessage",
+      {
+        userID: userID,
+        content:"Please greet me with a hello",
+        messageHistory: []
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => {
+        console.log(response);
+        if (response.data.errorMessage) {
+          console.log(response.data.errorMessage);
+          if(response.data.errorMessage === "User not found!")
+            setErrorMessage("User not found!")
+          else  
+            setErrorMessage("Your current session has been expired! Please sign-up again to start a new session.");
+          setOpen(true);
+        }
+        chat[0].response = response.data.gptResponse;
+        setTimeout(() => {
+          setChats([...chat]);
+        }, 1000);
+      })
+      .catch((err) => {});
+  }, [userID]);
 
   const {
     transcript,
@@ -32,8 +80,6 @@ export const Chatbot = () => {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-
-  const [chats, setChats] = useState([]);
 
   const sendMessage = () => {
     let chat = [
@@ -49,27 +95,31 @@ export const Chatbot = () => {
       const y =
         document.getElementById("chatbot-main-div").getBoundingClientRect()
           .bottom + window.scrollY;
-      if (y > 1000) {
+          console.log(y);
+      if (y > 770) {
         window.scroll({
           top: y,
           behavior: "smooth",
         });
       }
-    }, 100);
+    }, 200);
 
     let messageHistory = [];
-    for (let item in chats) {
+    messageHistory.push({role : "user", content : "please greet me with a hello"});
+    messageHistory.push({role : "assistant", content : "Hello. how may I assist you today?"});
+    for (let item of chats) {
       messageHistory.push({role : "user", content : item.userQuery});
       messageHistory.push({role : "assistant", content : item.response});
     }
+
+    console.log(messageHistory);
 
     Axios.post(
       "http://localhost:8000/newMessage",
       {
         userID: userID,
-        // content: document.getElementById('textarea-id').value
-        content: "hello, whats up!",
-        messageHistory: messageHistory
+        content: document.getElementById('textarea-id').value,
+        messageHistory
       },
       {
         headers: {
@@ -79,6 +129,14 @@ export const Chatbot = () => {
     )
       .then((response) => {
         console.log(response);
+        if (response.data.errorMessage) {
+          console.log(response.data.errorMessage);
+          if(response.data.errorMessage === "User not found!")
+            setErrorMessage("User not found!")
+          else  
+            setErrorMessage("Your current session has been expired! Please sign-up again to start a new session.");
+          setOpen(true);
+        }
         chat[0].response = response.data.gptResponse;
         setChats([...chats, ...chat]);
         setTimeout(() => {
@@ -94,20 +152,6 @@ export const Chatbot = () => {
         }, 100);
       })
       .catch((err) => {});
-
-    // setTimeout(() => {
-    //     chat[0].response = 'Hello';
-    //     setChats([...chats, ...chat]);
-    //     setTimeout(() => {
-    //         const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
-    //         if (y > 770) {
-    //             window.scroll({
-    //                 top: y,
-    //                 behavior: 'smooth'
-    //             });
-    //         }
-    //     }, 100);
-    // }, 3000);
 
     resetTranscript();
   };
@@ -210,6 +254,35 @@ export const Chatbot = () => {
           </div>
         </div>
       </div>
+      <Dialog
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-description"
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth="md"
+      >
+        <DialogTitle id="dialog-title" style={{ color: "red" }}>
+          Oops! <FontAwesomeIcon icon={faSadTear} />
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id="dialog-description"
+            style={{ color: "#282c34", margin: "10px" }}
+          >
+            { errorMessage }
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            variant="outlined"
+            color="error"
+            onClick={() => setOpen(false)}
+          >
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

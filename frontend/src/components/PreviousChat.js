@@ -6,24 +6,32 @@ import talk from '../talk.webm';
 
 export const PreviousChat = ({chat}) => {
     const onEnd = () => {
+        console.log("hiii");
         document.getElementById(chat.key).pause();
     }
     const {speak, cancel} = useSpeechSynthesis({onEnd});
     const startSpeaking = (e, msg) => {
+        console.log("boloooo");
         speak({ text:msg });
     }
     const stopSpeaking = () => {
+        console.log("hello");
         cancel();
     }
     return (
         <li>
             <div id="previous-chat-div"> 
-                <div className="user-query-div">
-                    <p className="user-query">{chat.userQuery}</p> 
-                </div>
+            {
+                chat.userQuery && <div>
+                    <div className="user-query-div">
+                        <p className="user-query">{chat.userQuery}</p> 
+                    </div>
 
-                <div className="big-bubble-right" style={{textAlign:'center'}}><FontAwesomeIcon icon={faUser}/></div>
-                <div className="small-bubble-right"></div>
+                    <div className="big-bubble-right" style={{textAlign:'center'}}><FontAwesomeIcon icon={faUser}/></div>
+                    <div className="small-bubble-right"></div>
+                </div>
+            }
+                
 
                 <div className="video-response-div">
                     { 

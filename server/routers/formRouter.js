@@ -46,7 +46,7 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
   console.log(req.body);
 
   let currentTime = new Date();
-  var expiryTime = new Date(currentTime.getTime() + 5 * 60000);
+  var expiryTime = new Date(currentTime.getTime() + 60 * 60000);
 
   userData = { ...userData, validTill: expiryTime.toISOString() };
 
@@ -61,14 +61,17 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
 });
 
 router.post("/newMessage", expiryChecker, (req, res) => {
-  const { userID, content, messageHistory } = req.body;
+  let { userID, content, messageHistory } = req.body;
+  messageHistory = [...messageHistory, {role: "user", content: content}]
+  console.log("Messages history: ", messageHistory)
+  
   if (content.trim().length > 0) {
     const userMessage = new message({ userID, isReply: false, content });
     userMessage.save();
     openAi
       .createChatCompletion({
         model: "gpt-3.5-turbo",
-        messages: [...messageHistory, { role: "user", content: content }],
+        messages: messageHistory
       })
       .then((response) => {
         let msg = response.data.choices[0].message.content;
