@@ -2,18 +2,17 @@ const express = require("express");
 const router = express.Router();
 const mailer = require("../utils/mailer");
 const multer = require("multer");
-//const multerStorage = require("../utils/multerStorage");
-const multerStorage = multer.diskStorage({
-  // destination: (req, file, cb) => {
-  //   console.log("ASDASDASDASDASDASDASDASD!@)!@)#!@)#(!@)#(!@)#(!)@#!@#");
-  //   cb(null, "public");
-  // },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split("/")[1];
-    console.log("AKSLQJWLKIOUONLKLK!@#!()(!13235%#@%#@%$$~");
-    cb(null, `files/admin-${file.fieldname}-${Date.now()}.${ext}`);
-  },
-});
+const multerStorage = require("../utils/multerStorage");
+// const multerStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     console.log("ASDASDASDASDASDASDASDASD!@)!@)#!@)#(!@)#(!@)#(!)@#!@#");
+//     cb(null, "public");
+//   },
+//   filename: (req, file, cb) => {
+//     const ext = file.mimetype.split("/")[1];
+//     cb(null, `files/admin-${file.fieldname}-${Date.now()}.${ext}`);
+//   },
+// });
 const upload = multer({
   storage: multerStorage,
   //dest: "public/user_files",
@@ -57,13 +56,13 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
 });
 
 router.post("/newMessage", (req, res) => {
-  const { userID, content } = req.body;
+  const { userID, content, messageHistory } = req.body;
   const userMessage = new message({ userID, isReply: false, content });
   userMessage.save();
   openAi
     .createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: content }],
+      messages: [...messageHistory, { role: "user", content: content }],
     })
     .then((response) => {
       const responseMessage = new message({

@@ -51,8 +51,8 @@ export const Chatbot = () => {
       "http://localhost:8000/newMessage",
       {
         userID: userID,
-        content: document.getElementById('textarea-id').value
-        //content: "hello, whats up!",
+        // content: document.getElementById('textarea-id').value
+        content: "hello, whats up!",
       },
       {
         headers: {
