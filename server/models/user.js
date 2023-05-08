@@ -10,6 +10,7 @@ const user = new mongoose.Schema({
   city: { type: String, required: true },
   dob: { type: Date, required: true },
   document1FilePath: { type: String, required: false },
+  validTill: { type: String, required: true },
   // document2FilePath: { type: String, required: true },
   // document3FilePath: { type: String, required: true },
 });

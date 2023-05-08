@@ -15,7 +15,6 @@ const multerStorage = require("../utils/multerStorage");
 // });
 const upload = multer({
   storage: multerStorage,
-  //dest: "public/user_files",
   onFileUploadStart: function (file) {
     console.log(file.fieldname + " is starting ...");
   },
@@ -34,6 +33,7 @@ const message = require("../models/message");
 const { config } = require("dotenv");
 config();
 const { Configuration, OpenAIApi } = require("openai");
+const expiryChecker = require("../utils/expiryChecker");
 const openAi = new OpenAIApi(
   new Configuration({
     apiKey: process.env.OPEN_AI_API_KEY,
@@ -42,8 +42,11 @@ const openAi = new OpenAIApi(
 
 router.post("/submitForm", upload.single("document1"), (req, res) => {
   //console.log(JSON.parse(req.body.otherData));
-  const userData = JSON.parse(req.body.otherData);
+  let userData = JSON.parse(req.body.otherData);
   console.log(req.body);
+
+  con;
+  userData = { ...userData, validTill: new Date().toISOString() };
 
   const newUser = new User(userData);
   newUser.save();
@@ -55,7 +58,7 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
   res.json({ message: "Added new user" });
 });
 
-router.post("/newMessage", (req, res) => {
+router.post("/newMessage", expiryChecker, (req, res) => {
   const { userID, content, messageHistory } = req.body;
   if (content.trim().length > 0) {
     const userMessage = new message({ userID, isReply: false, content });
