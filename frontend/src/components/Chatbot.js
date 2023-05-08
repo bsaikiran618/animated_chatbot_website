@@ -3,17 +3,24 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { Button } from "@mui/material";
-import waves from '../wavess.gif';
-import { faStopCircle, faRefresh, faPaperPlane, faMicrophoneAlt, faHome, faRobot } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState, useEffect } from 'react';
-import { ChatHistory } from './ChatHistory';
+import waves from "../wavess.gif";
+import {
+  faStopCircle,
+  faRefresh,
+  faPaperPlane,
+  faMicrophoneAlt,
+  faHome,
+  faRobot,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useEffect } from "react";
+import { ChatHistory } from "./ChatHistory";
 import { useNavigate, useParams } from "react-router-dom";
 import Axios from "axios";
 
 export const Chatbot = () => {
-    const navigate = useNavigate();
-    const { userID } = useParams();
+  const navigate = useNavigate();
+  const { userID } = useParams();
 
   useEffect(() => {
     document.title = "Chatbot";
@@ -28,24 +35,27 @@ export const Chatbot = () => {
 
   const [chats, setChats] = useState([]);
 
-      const sendMessage = () => {
-        let chat = [{
-            key: (new Date()).getTime(),
-            userQuery: document.getElementById('textarea-id').value,
-            response: ''
-        }];
-        setChats([...chats, ...chat]);
+  const sendMessage = () => {
+    let chat = [
+      {
+        key: new Date().getTime(),
+        userQuery: document.getElementById("textarea-id").value,
+        response: "",
+      },
+    ];
+    setChats([...chats, ...chat]);
 
-
-        setTimeout(() => {
-            const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
-            if (y > 1000) {
-                window.scroll({
-                    top: y,
-                    behavior: 'smooth'
-                });
-            }
-        }, 100);
+    setTimeout(() => {
+      const y =
+        document.getElementById("chatbot-main-div").getBoundingClientRect()
+          .bottom + window.scrollY;
+      if (y > 1000) {
+        window.scroll({
+          top: y,
+          behavior: "smooth",
+        });
+      }
+    }, 100);
 
     Axios.post(
       "http://localhost:8000/newMessage",
@@ -53,45 +63,48 @@ export const Chatbot = () => {
         userID: userID,
         // content: document.getElementById('textarea-id').value
         content: "hello, whats up!",
+        messageHistory: [],
       },
       {
         headers: {
           "Content-Type": "application/json",
         },
-        })
-        .then((response) => {
-            console.log(response);
-            chat[0].response = response.data.gptResponse;
-            setChats([...chats, ...chat]);
-            setTimeout(() => {
-                const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
-                if (y > 770) {
-                    window.scroll({
-                        top: y,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 100);
-        })
-        .catch((err) => {
-        });
-
-        // setTimeout(() => {
-        //     chat[0].response = 'Hello';
-        //     setChats([...chats, ...chat]);
-        //     setTimeout(() => {
-        //         const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
-        //         if (y > 770) {
-        //             window.scroll({
-        //                 top: y,
-        //                 behavior: 'smooth'
-        //             });
-        //         }
-        //     }, 100);
-        // }, 3000);
-    
-        resetTranscript();
       }
+    )
+      .then((response) => {
+        console.log(response);
+        chat[0].response = response.data.gptResponse;
+        setChats([...chats, ...chat]);
+        setTimeout(() => {
+          const y =
+            document.getElementById("chatbot-main-div").getBoundingClientRect()
+              .bottom + window.scrollY;
+          if (y > 770) {
+            window.scroll({
+              top: y,
+              behavior: "smooth",
+            });
+          }
+        }, 100);
+      })
+      .catch((err) => {});
+
+    // setTimeout(() => {
+    //     chat[0].response = 'Hello';
+    //     setChats([...chats, ...chat]);
+    //     setTimeout(() => {
+    //         const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;
+    //         if (y > 770) {
+    //             window.scroll({
+    //                 top: y,
+    //                 behavior: 'smooth'
+    //             });
+    //         }
+    //     }, 100);
+    // }, 3000);
+
+    resetTranscript();
+  };
 
   const backToHome = () => {
     navigate("../");
