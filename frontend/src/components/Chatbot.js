@@ -60,8 +60,8 @@ export const Chatbot = () => {
         },
         })
         .then((response) => {
-            // replace hardcoded response msg with api response msg
-            chat[0].response = 'Hello, this is audio visual conversational bot.';
+            console.log(response);
+            chat[0].response = response.data.gptResponse;
             setChats([...chats, ...chat]);
             setTimeout(() => {
                 const y = document.getElementById('chatbot-main-div').getBoundingClientRect().bottom + window.scrollY;

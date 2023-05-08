@@ -57,28 +57,40 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
 
 router.post("/newMessage", (req, res) => {
   const { userID, content, messageHistory } = req.body;
-  const userMessage = new message({ userID, isReply: false, content });
-  userMessage.save();
-  openAi
-    .createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [...messageHistory, { role: "user", content: content }],
-    })
-    .then((response) => {
-      const responseMessage = new message({
-        userID,
-        isReply: true,
-        content: response.data.choices[0].message.content,
-      });
-      responseMessage.save();
-      res.json({ gptResponse: response.data.choices[0].message.content });
-    })
-    .catch((error) => {
-      res.json({ error: error.response });
-      console.log(error.response);
-    });
+  if (content.trim().length > 0) {
+    const userMessage = new message({ userID, isReply: false, content });
+    userMessage.save();
+    openAi
+      .createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [...messageHistory, { role: "user", content: content }],
+      })
+      .then((response) => {
+        let msg = response.data.choices[0].message.content;
+        console.log("msg before: " + msg);
+        const badPrefix1 = "As an AI language model,";
+        const badPrefix2 = "as an AI language model,";
 
-  console.log("new message stored.");
+        if (msg.includes(badPrefix1) || msg.includes(badPrefix2)) {
+          msg = msg.replace(badPrefix1, "");
+          msg = msg.replace(badPrefix2, "");
+        }
+        console.log("msg after: " + msg);
+        const responseMessage = new message({
+          userID,
+          isReply: true,
+          content: msg,
+        });
+        responseMessage.save();
+        res.json({ gptResponse: msg });
+      })
+      .catch((error) => {
+        res.json({ error: error });
+        console.log(error);
+      });
+
+    console.log("new message stored.");
+  }
 });
 
 module.exports = router;
