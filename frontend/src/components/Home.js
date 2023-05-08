@@ -277,6 +277,7 @@ export const Home = () => {
                   helperText={
                     formErrors.phone.error && formErrors.phone.errorMessage
                   }
+                  required
                 />
               </Col>
               <Col className="form-column">
@@ -405,7 +406,7 @@ export const Home = () => {
             style={{ color: "#282c34", margin: "10px" }}
           >
             Successfully Submitted! Please check your e-mail inbox for a link to
-            the Audio Video Conversational Bot.
+            the Audio Visual Conversational Bot.
             <br /> Thank You!
           </DialogContentText>
         </DialogContent>

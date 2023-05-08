@@ -57,13 +57,19 @@ export const Chatbot = () => {
       }
     }, 100);
 
+    let messageHistory = [];
+    for (let item in chats) {
+      messageHistory.push({role : "user", content : item.userQuery});
+      messageHistory.push({role : "assistant", content : item.response});
+    }
+
     Axios.post(
       "http://localhost:8000/newMessage",
       {
         userID: userID,
         // content: document.getElementById('textarea-id').value
         content: "hello, whats up!",
-        messageHistory: [],
+        messageHistory: messageHistory
       },
       {
         headers: {
