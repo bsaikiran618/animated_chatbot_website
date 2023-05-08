@@ -45,8 +45,10 @@ router.post("/submitForm", upload.single("document1"), (req, res) => {
   let userData = JSON.parse(req.body.otherData);
   console.log(req.body);
 
-  con;
-  userData = { ...userData, validTill: new Date().toISOString() };
+  let currentTime = new Date();
+  var expiryTime = new Date(currentTime.getTime() + 5 * 60000);
+
+  userData = { ...userData, validTill: expiryTime.toISOString() };
 
   const newUser = new User(userData);
   newUser.save();
