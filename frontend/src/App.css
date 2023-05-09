@@ -164,6 +164,7 @@ input[type=date]:focus::-webkit-datetime-edit {
 .talking-video {
   width: 450px;
   margin-left: 0px;
+  margin-top: 10px;
   border: 2px solid skyblue;
 }
 
@@ -226,6 +227,7 @@ input[type=date]:focus::-webkit-datetime-edit {
 .response-loader {
   width: 130px;
   margin-left: 50px;
+  margin-top: 10px;
 }
 
 .chat-history-div {
