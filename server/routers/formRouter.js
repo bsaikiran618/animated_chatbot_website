@@ -2,17 +2,17 @@ const express = require("express");
 const router = express.Router();
 const mailer = require("../utils/mailer");
 const multer = require("multer");
-const multerStorage = require("../utils/multerStorage");
-// const multerStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     console.log("ASDASDASDASDASDASDASDASD!@)!@)#!@)#(!@)#(!@)#(!)@#!@#");
-//     cb(null, "public");
-//   },
-//   filename: (req, file, cb) => {
-//     const ext = file.mimetype.split("/")[1];
-//     cb(null, `files/admin-${file.fieldname}-${Date.now()}.${ext}`);
-//   },
-// });
+//const multerStorage = require("../utils/multerStorage");
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    console.log("ASDASDASDASDASDASDASDASD!@)!@)#!@)#(!@)#(!@)#(!)@#!@#");
+    cb(null, "public");
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split("/")[1];
+    cb(null, `files/admin-${file.fieldname}-${Date.now()}.${ext}`);
+  },
+});
 const upload = multer({
   storage: multerStorage,
   onFileUploadStart: function (file) {
